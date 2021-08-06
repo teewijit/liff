@@ -60,15 +60,41 @@
     }
 
     function openWindow() {
+      liff.openWindow({
+        url : "https://line.me"
+        external : true
+      })
     }
 
     async function getFriendship() {
+      const friend = await liff.getFriendship()
+      document.getElementById("friendship").append(friend.friendFlag)
+      if (!friend.friendFlag){
+        if (confirm("คุณยังไม่ได้เพิ่ม Bot เป็นเพื่อนจะเพิ่มเลยมั้ย ?")) {
+          window.location = ""
+        }
+      }
     }
 
     async function sendMsg() {
+      if (liff.getContext().type  !== "none") {
+        await liff.liff.sendMessages([
+          {
+            "type": 'sticker',
+            "stickerId": 1,
+            "packageId": 1
+          }
+        ])
+        alert("Message Sent");
+      }
     }
 
     function getContext() {
+      document.getElementById("type").append(liff.getContext().type)
+      document.getElementById("viewType").append(liff.getContext().viewType)
+      document.getElementById("utouId").append(liff.getContext().utouId)
+      document.getElementById("roomId").append(liff.getContext().roomId)
+      document.getElementById("groupId").append(liff.getContext().groupId)
     }
 
     async function getUserProfile() {
@@ -77,6 +103,7 @@
       document.getElementById("userId").append(profile.userId)
       document.getElementById("statusMessage").append(profile.statusMessage)
       document.getElementById("displayName").append(profile.displayName)
+      document.getElementById("decodedIDToken").append(liff.getDecodedIDToken().email)
     }
 
     function getEnvironment() {
@@ -99,8 +126,8 @@
       await liff.init({ liffId: "1656290112-Y9DVX8W5" })
       getEnvironment()
       getUserProfile()
-      // getContext()
-      // getFriendship()
+      getContext()
+      getFriendship()
       // createUniversalLink()
     }
     main()
